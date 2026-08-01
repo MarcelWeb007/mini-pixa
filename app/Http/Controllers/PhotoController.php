@@ -43,33 +43,33 @@ class PhotoController extends Controller
         ], 201);
     }
 
-    /**
-     * Obtenir la liste des photos (Public)
-     */
     public function index(Request $request)
-    {
-        $query = Photo::with(['user:id,name', 'category:id,name'])->withCount('likes');
+{
+    $query = Photo::with(['user:id,name', 'category:id,name'])
+        ->withCount('likes'); // <-- OBLIGATOIRE pour remplir likes_count
 
-        if ($request->has('category_id')) {
-            $query->where('category_id', $request->category_id);
-        }
-
-        $photos = $query->latest()->get()->map(function ($photo) use ($request) {
-            return [
-                'id' => $photo->id,
-                'title' => $photo->title,
-                'url' => Storage::disk('photos')->url($photo->image_path),
-                'category' => $photo->category->name,
-                'publisher' => $photo->user->name,
-                'likes_count' => $photo->likes_count,
-                'is_liked' => $request->user('sanctum')
-                    ? $photo->likes()->where('user_id', $request->user('sanctum')->id)->exists()
-                    : false
-            ];
-        });
-
-        return response()->json($photos);
+    // Filtrage optionnel par catégorie
+    if ($request->has('category_id')) {
+        $query->where('category_id', $request->category_id);
     }
+
+    $photos = $query->latest()->get()->map(function ($photo) use ($request) {
+        return [
+            'id' => $photo->id,
+            'title' => $photo->title,
+            'url' => Storage::disk('photos')->url($photo->image_path),
+            'category' => $photo->category ? $photo->category->name : 'Non classé',
+            'publisher' => $photo->user ? $photo->user->name : 'Anonyme',
+            'likes_count' => $photo->likes_count,
+            // Vérification si l'utilisateur actuellement connecté via Bearer Token a liké
+            'is_liked' => $request->user('sanctum')
+                ? $photo->likes()->where('user_id', $request->user('sanctum')->id)->exists()
+                : false,
+        ];
+    });
+
+    return response()->json($photos);
+}
 
     /**
      * Supprimer une photo
@@ -81,10 +81,25 @@ class PhotoController extends Controller
         }
 
         // Suppression sur le disque 'photos'
-        Storage::disk('photos')->delete($photo->image_path);
+        //Storage::disk('photos')->delete($photo->image_path);
         $photo->delete();
 
         return response()->json(['message' => 'Photo supprimée avec succès']);
     }
+
+    public function toggleLike(Request $request, Photo $photo)
+{
+    $user = $request->user();
+
+    // toggle() ajoute l'enregistrement s'il n'existe pas, ou le supprime s'il existe déjà
+    $changes = $photo->likes()->toggle($user->id);
+    $isLiked = count($changes['attached']) > 0;
+
+    return response()->json([
+        'message' => $isLiked ? 'Photo likée !' : 'Like retiré !',
+        'is_liked' => $isLiked,
+        'likes_count' => $photo->likes()->count(),
+    ]);
+}
 
 }
