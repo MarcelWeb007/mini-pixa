@@ -229,7 +229,7 @@
                             <span class="badge badge-method badge-get">GET</span>
                             <span class="fw-bold font-mono text-dark">/api/categories</span>
                         </div>
-                        <span class="text-secondary small">Récupère la liste de toutes les catégories de photos.</span>
+                        <span class="text-secondary small">Récupère la liste des catégories (supporte le paramètre <code class="bg-white px-1 border rounded">?is_visible=true</code> pour filtrer la visibilité).</span>
                     </div>
 
                     <!-- GET /photos -->
@@ -307,7 +307,7 @@
                             <span class="badge badge-method badge-post">POST</span>
                             <span class="fw-bold font-mono text-dark">/api/categories</span>
                         </div>
-                        <span class="text-secondary small">Crée une nouvelle catégorie dans l'application.</span>
+                        <span class="text-secondary small">Crée une nouvelle catégorie en définissant son statut de visibilité (<code class="bg-white px-1 border rounded">name</code>, <code class="bg-white px-1 border rounded">is_visible</code>: boolean).</span>
                     </div>
 
                     <!-- POST /photos -->
@@ -341,7 +341,7 @@
 
             <!-- Banner Bonne Chance -->
             <div class="p-5 rounded-4 text-center text-white shadow-sm my-5" style="background: linear-gradient(135deg, #059669 0%, #0d9488 100%);">
-                <h3 class="fw-bold mb-2">🚀 Bonne chance boas !</h3>
+                <h3 class="fw-bold mb-2">🚀 Bonne chance pour votre projet !</h3>
                 <p class="mb-0 text-white-50 mx-auto" style="max-width: 600px;">
                     Développez sereinement votre interface avec Vanilla JS. Que toutes vos requêtes API retournent un statut <span class="badge bg-white text-dark font-mono px-2 py-1">200 OK</span> !
                 </p>
@@ -352,11 +352,11 @@
         <!-- Footer -->
         <footer class="bg-white border-top py-4 text-center text-muted small">
             <div class="container">
-                Mini-Pixa API — Propulsé par Laravel Cloud & ANVANE Marcel
+                Mini-Pixa API — Propulsé par Laravel Cloud & Cloudflare R2 Storage
             </div>
         </footer>
 
         <!-- Bootstrap 5 JS Bundle -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="center"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
 </html>
